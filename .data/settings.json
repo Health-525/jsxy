@@ -1,0 +1,64 @@
+{
+  "language": "zh-CN",
+  "characterId": "default",
+  "expressionMode": "automatic",
+  "scale": 1,
+  "alwaysOnTop": true,
+  "restReminderMinutes": 60,
+  "health": {
+    "hydrationEnabled": true,
+    "hydrationIntervalMinutes": 30,
+    "sedentaryEnabled": true,
+    "sedentaryIntervalMinutes": 45,
+    "standupEnabled": true,
+    "standupIntervalMinutes": 60,
+    "reduceInFocusMode": true,
+    "postureDetectionEnabled": false,
+    "postureSensitivity": "balanced",
+    "postureCooldownMinutes": 20,
+    "expressionDetectionEnabled": false,
+    "expressionSensitivity": "balanced",
+    "expressionCooldownMinutes": 15
+  },
+  "assistant": {
+    "baseUrl": "",
+    "model": "",
+    "temperature": 0.7,
+    "maxHistory": 12
+  },
+  "tts": {
+    "enabled": false,
+    "provider": "none",
+    "voiceName": "",
+    "rate": 1,
+    "pitch": 1,
+    "endpoint": "",
+    "requestMode": "json",
+    "textLanguage": "zh",
+    "promptLanguage": "zh",
+    "promptText": "",
+    "referenceAudioPath": "",
+    "textSplitMethod": "cut5",
+    "mediaType": "wav",
+    "customBodyTemplate": "{\"text\":\"{{text}}\"}"
+  },
+  "persona": {
+    "setupDone": false,
+    "name": "",
+    "personality": "",
+    "speakingStyle": "",
+    "background": "",
+    "extraRules": ""
+  },
+  "affection": {
+    "enabled": false,
+    "label": "好感",
+    "minutesPerPoint": 10,
+    "activeWindowMinutes": 15,
+    "happyThreshold": 50,
+    "closeThreshold": 75,
+    "lowTone": "保持礼貌但有一点距离感，回复简洁，不要过分亲昵。",
+    "mediumTone": "自然友好，带一点熟悉感，可以适度关心对方。",
+    "highTone": "更亲近、更信任，语气可以更温柔主动，但不要失去角色边界。"
+  }
+}

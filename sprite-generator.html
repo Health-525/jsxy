@@ -1,0 +1,334 @@
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;桌宠精灵图生成器&lt;/title&gt;
+    &lt;style&gt;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .upload-section {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-section:hover {
+            background: #f0f4ff;
+            border-color: #764ba2;
+        }
+        .upload-section.dragover {
+            background: #e8eeff;
+            border-color: #764ba2;
+        }
+        .upload-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .preview-container {
+            margin: 30px 0;
+        }
+        .preview-title {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #555;
+        }
+        .preview-image {
+            max-width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+        .controls {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        .control-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+        .control-row label {
+            min-width: 120px;
+            font-weight: 600;
+            color: #444;
+        }
+        .control-row input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            width: 150px;
+        }
+        .control-row input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102,126,234,0.4);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .result-container {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 3px dashed #ddd;
+        }
+        .result-title {
+            font-size: 20px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .result-image-container {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .instructions {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #ff9800;
+            margin-bottom: 20px;
+        }
+        .instructions h3 {
+            color: #ff9800;
+            margin-bottom: 10px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            color: #555;
+        }
+        .instructions li {
+            margin-bottom: 8px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;h1&gt;🐑 桌宠精灵图生成器&lt;/h1&gt;
+        
+        &lt;div class="instructions"&gt;
+            &lt;h3&gt;📋 使用说明&lt;/h3&gt;
+            &lt;ol&gt;
+                &lt;li&gt;上传你的 Bellwether 图片（或者任何你想做桌宠的图片）&lt;/li&gt;
+                &lt;li&gt;调整图片位置和尺寸（可选）&lt;/li&gt;
+                &lt;li&gt;点击「生成精灵图」&lt;/li&gt;
+                &lt;li&gt;下载生成的图片，替换到 assets/characters/bellwether/sprite.png&lt;/li&gt;
+            &lt;/ol&gt;
+        &lt;/div&gt;
+
+        &lt;div class="upload-section" id="uploadSection"&gt;
+            &lt;div class="upload-icon"&gt;📸&lt;/div&gt;
+            &lt;h3&gt;点击或拖拽图片到这里&lt;/h3&gt;
+            &lt;p&gt;支持 JPG、PNG、GIF 格式&lt;/p&gt;
+            &lt;input type="file" id="fileInput" accept="image/*"&gt;
+        &lt;/div&gt;
+
+        &lt;div class="preview-container" id="previewContainer" style="display: none;"&gt;
+            &lt;div class="preview-title"&gt;📷 原始图片预览&lt;/div&gt;
+            &lt;img id="originalPreview" class="preview-image" alt="预览"&gt;
+        &lt;/div&gt;
+
+        &lt;div class="controls" id="controls" style="display: none;"&gt;
+            &lt;div class="control-row"&gt;
+                &lt;label&gt;帧宽度:&lt;/label&gt;
+                &lt;input type="number" id="frameWidth" value="768" min="100" max="2000"&gt;
+            &lt;/div&gt;
+            &lt;div class="control-row"&gt;
+                &lt;label&gt;帧高度:&lt;/label&gt;
+                &lt;input type="number" id="frameHeight" value="832" min="100" max="2000"&gt;
+            &lt;/div&gt;
+            &lt;div class="control-row"&gt;
+                &lt;label&gt;列数:&lt;/label&gt;
+                &lt;input type="number" id="columns" value="8" min="1" max="20"&gt;
+            &lt;/div&gt;
+            &lt;div class="control-row"&gt;
+                &lt;label&gt;行数:&lt;/label&gt;
+                &lt;input type="number" id="rows" value="8" min="1" max="20"&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class="btn-container" id="btnContainer" style="display: none;"&gt;
+            &lt;button class="btn" id="generateBtn"&gt;🎨 生成精灵图&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;div class="result-container" id="resultContainer" style="display: none;"&gt;
+            &lt;div class="result-title"&gt;✅ 精灵图生成成功！&lt;/div&gt;
+            &lt;div class="result-image-container"&gt;
+                &lt;img id="resultImage" class="preview-image" alt="生成的精灵图"&gt;
+            &lt;/div&gt;
+            &lt;div class="btn-container"&gt;
+                &lt;button class="btn" id="downloadBtn"&gt;💾 下载精灵图&lt;/button&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        const uploadSection = document.getElementById('uploadSection');
+        const fileInput = document.getElementById('fileInput');
+        const previewContainer = document.getElementById('previewContainer');
+        const originalPreview = document.getElementById('originalPreview');
+        const controls = document.getElementById('controls');
+        const btnContainer = document.getElementById('btnContainer');
+        const generateBtn = document.getElementById('generateBtn');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultImage = document.getElementById('resultImage');
+        const downloadBtn = document.getElementById('downloadBtn');
+
+        let currentImage = null;
+
+        // 点击上传区域
+        uploadSection.addEventListener('click', () =&gt; fileInput.click());
+
+        // 拖拽功能
+        uploadSection.addEventListener('dragover', (e) =&gt; {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+        uploadSection.addEventListener('dragleave', () =&gt; {
+            uploadSection.classList.remove('dragover');
+        });
+        uploadSection.addEventListener('drop', (e) =&gt; {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        // 文件选择
+        fileInput.addEventListener('change', (e) =&gt; {
+            if (e.target.files.length) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        // 处理文件
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                alert('请上传图片文件！');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) =&gt; {
+                currentImage = new Image();
+                currentImage.onload = () =&gt; {
+                    originalPreview.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    controls.style.display = 'block';
+                    btnContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                };
+                currentImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 生成精灵图
+        generateBtn.addEventListener('click', () =&gt; {
+            if (!currentImage) return;
+
+            const frameWidth = parseInt(document.getElementById('frameWidth').value);
+            const frameHeight = parseInt(document.getElementById('frameHeight').value);
+            const columns = parseInt(document.getElementById('columns').value);
+            const rows = parseInt(document.getElementById('rows').value);
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = frameWidth * columns;
+            canvas.height = frameHeight * rows;
+
+            // 填充透明背景
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 计算缩放和居中
+            const scale = Math.min(
+                frameWidth / currentImage.width,
+                frameHeight / currentImage.height
+            ) * 0.8; // 80% 大小，留点边距
+
+            const drawWidth = currentImage.width * scale;
+            const drawHeight = currentImage.height * scale;
+            const offsetX = (frameWidth - drawWidth) / 2;
+            const offsetY = (frameHeight - drawHeight) / 2;
+
+            // 把图片复制到每一格
+            for (let row = 0; row &lt; rows; row++) {
+                for (let col = 0; col &lt; columns; col++) {
+                    const x = col * frameWidth + offsetX;
+                    const y = row * frameHeight + offsetY;
+                    ctx.drawImage(currentImage, x, y, drawWidth, drawHeight);
+                }
+            }
+
+            resultImage.src = canvas.toDataURL('image/png');
+            resultContainer.style.display = 'block';
+        });
+
+        // 下载图片
+        downloadBtn.addEventListener('click', () =&gt; {
+            const link = document.createElement('a');
+            link.download = 'sprite.png';
+            link.href = resultImage.src;
+            link.click();
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;

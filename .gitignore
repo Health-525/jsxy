@@ -1,0 +1,29 @@
+<<<<<<< HEAD
+node_modules/
+dist/
+out/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+=======
+node_modules/
+dist/
+out/
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+>>>>>>> 81a79cf (Add chat model setup presets)
